@@ -6,3 +6,6 @@ movies_data/load_movie_data.py
 movies_data/movie
 out/
 .idea/
+__pycache__
+tools/__pycache__
+web/__pycache__

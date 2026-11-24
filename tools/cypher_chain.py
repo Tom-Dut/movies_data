@@ -1,29 +1,20 @@
 import os
-
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
-
-import movies_data.user_consts as consts
-
 from langchain_core.documents import Document
 from langchain_core.runnables import RunnableLambda
-
 from operator import itemgetter
-
 from langchain_ollama import ChatOllama
-
 from langchain_core.prompts import (
     ChatPromptTemplate,
     PromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )
-
 from langchain_core.output_parsers import StrOutputParser
-
 from movies_data.neo4j_utils_py2neo import construct_neo4j_graph_schema, extract_cypher, correct_cypher_query
-
+import movies_data.user_consts as consts
 
 
 def format_cypher_examples(documents: list[Document]) -> str:

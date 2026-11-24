@@ -1,22 +1,17 @@
 import os
-
 from operator import itemgetter
-
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.vectorstores import Chroma
-
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama import ChatOllama
-
 from langchain_core.prompts import (
     ChatPromptTemplate,
     PromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )
-
 from langchain_core.output_parsers import StrOutputParser
-
+from langchain_classic.agents import Tool
 import movies_data.user_consts as consts
 
 REVIEWS_CSV_PATH = os.path.join(
@@ -133,6 +128,17 @@ review_chain = (
     | chat_model
     | StrOutputParser()
 )
+
+review_tool = Tool(
+    name="MovieReviewSearch",
+    func=lambda question: review_chain.invoke({"question": question}),
+    description=(
+        "Recherche dans les avis de films pour répondre aux questions sur "
+        "les opinions des utilisateurs. L'entrée doit être la question complète."
+    ),
+)
+
+
 
 if __name__ == "__main__":
 

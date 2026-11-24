@@ -1,19 +1,14 @@
 from operator import itemgetter
-
 from langchain_ollama import ChatOllama
-
 from langchain_core.prompts import (
     ChatPromptTemplate,
     PromptTemplate,
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate
 )
-
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda
-
 import movies_data.user_consts as consts
-
 from movies_data.neo4j_utils_py2neo import (
     run_predicted_cypher_query
 )
@@ -32,6 +27,7 @@ If the result is empty, say that no result was found.
 
 Neo4j result:
 {context}
+Take the Neo4j result and put it into a phrase
 """
 qa_system_prompt = SystemMessagePromptTemplate(
     prompt=PromptTemplate(
