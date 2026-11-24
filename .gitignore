@@ -5,3 +5,4 @@ movies_data/load_movie_data.py
 movies_data/user_consts.py
 movies_data/movie
 out/
+.idea/
