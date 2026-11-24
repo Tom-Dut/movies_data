@@ -27,7 +27,6 @@ If the result is empty, say that no result was found.
 
 Neo4j result:
 {context}
-Take the Neo4j result and put it into a phrase
 """
 qa_system_prompt = SystemMessagePromptTemplate(
     prompt=PromptTemplate(
