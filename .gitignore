@@ -2,3 +2,5 @@ env/
 movies_data/movie/
 movies_data/__MACOSX/
 movies_data/__pycache__/
+movies_data/user_consts.py
+movies_data/load_movie_data.py
