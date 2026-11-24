@@ -23,7 +23,7 @@ cypher_qa_chain = (
 
 if __name__ == "__main__":
 
-    question = "What is the most recent movie?"
+    question = "What is the average rating value for the movie Hollow Man?"
 
     response = cypher_qa_chain.invoke(
         {
