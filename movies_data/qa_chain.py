@@ -20,17 +20,19 @@ from movies_data.neo4j_utils_py2neo import (
 
 qa_template_str = """
 Task:
-Your job is to answer the user's question using the result
+Your job is to answer the user's question using only the result
 returned by the Neo4j database.
 
 Use only the Neo4j result below.
+Do not use external knowledge.
+Do not add corrections, comments, notes or information that is
+not explicitly present in the Neo4j result.
 Do not make up information.
 If the result is empty, say that no result was found.
 
 Neo4j result:
 {context}
 """
-
 qa_system_prompt = SystemMessagePromptTemplate(
     prompt=PromptTemplate(
         input_variables=["context"],
