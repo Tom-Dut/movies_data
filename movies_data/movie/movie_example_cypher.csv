@@ -1,0 +1,49 @@
+"question","cypher"
+"Which actors in movies have ratings above 4?","MATCH (a:Actor)-[:ACTED_IN]->(m:Movie)<-[r:RATED]-(u:User)
+WHERE r.rating > 4
+RETURN DISTINCT a.name;"
+"What are the 5 most overrated movies?","MATCH (m:Movie)<-[r:RATED]-(:User)
+WITH m, AVG(r.rating) AS avg_rating
+ORDER BY avg_rating DESC LIMIT 5
+RETURN m.title, avg_rating;"
+"List the films that have at least two directors, and optionally the names of the people who gave their opinions on these films.","MATCH (m:Movie)
+WHERE count{(m)<-[:DIRECTED]-(:Director)} >= 2
+OPTIONAL MATCH (m)<-[r:RATED]-(u:User)
+RETURN m.title, COLLECT(u.name) AS reviewers;"
+"list the number of Tom Hanks' co-actors","MATCH (a:Actor {name: ""Tom Hanks""})-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(coactor:Actor)
+RETURN COUNT(DISTINCT coactor);"
+"List all Tom Hanks’ movies","MATCH (a:Actor {name: ""Tom Hanks""})-[:ACTED_IN]->(m:Movie)
+RETURN m.title;"
+"What is the average rating value for the movie Sounder?","MATCH (m:Movie {title: ""Sounder""})<-[r:RATED]-(:User)
+RETURN AVG(r.rating) AS avg_rating;"
+"What is the most recent movie?","MATCH (m:Movie)
+WHERE m.released IS NOT NULL AND m.released <> """" AND m.released <> ""null""
+RETURN m.title, m.released
+ORDER BY m.released DESC
+LIMIT 1;"
+"Which movies are not reviewed by Robert Brooks?","MATCH (m:Movie)
+WHERE NOT EXISTS {
+  MATCH (:User {name: ""Robert Brooks""})-[:RATED]->(m)
+}
+RETURN m.title;"
+"What are the co-actors of Robert de Niro, grouped by movie?","MATCH (a:Actor {name: ""Robert De Niro""})-[:ACTED_IN]->(m:Movie)<-[:ACTED_IN]-(coactor:Actor)
+WHERE coactor <> a
+RETURN m.title AS movie, COLLECT(DISTINCT coactor.name) AS coactors;"
+"List the directors who directed more than one movie.","MATCH (d:Director)-[:DIRECTED]->(m:Movie)
+WITH d, COUNT(DISTINCT m) AS nb_movies
+WHERE nb_movies > 1
+RETURN d.name, nb_movies;"
+"List the directors older than 80 years old","MATCH (d:Director)
+WHERE d.born IS NOT NULL AND d.born <> """" AND d.born <> ""null""
+  AND (d.died IS NULL OR d.died = """" OR d.died = ""null"")
+  AND (date().year - toInteger(left(d.born, 4))) > 80
+RETURN d.name, d.born;"
+"Which movie genre gets the most ratings by the users?","MATCH (g:Genre)<-[:IN_GENRE]-(m:Movie)<-[r:RATED]-(:User)
+RETURN g.name AS genre, COUNT(r) AS nb_ratings
+ORDER BY nb_ratings DESC
+LIMIT 1;"
+"Which users co-reviewed the same movies more than twice?","MATCH (u1:User)-[:RATED]->(m:Movie)<-[:RATED]-(u2:User)
+WHERE id(u1) < id(u2)
+WITH u1, u2, COUNT(DISTINCT m) AS common_movies
+WHERE common_movies > 2
+RETURN u1.name AS user1, u2.name AS user2, common_movies;"
