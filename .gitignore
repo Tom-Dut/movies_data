@@ -1,2 +1,4 @@
 env/
-
+movies_data/movie/
+movies_data/__MACOSX/
+movies_data/__pycache__/

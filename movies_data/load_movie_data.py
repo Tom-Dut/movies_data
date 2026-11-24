@@ -3,6 +3,35 @@ import pandas as pd
 import movies_data.user_consts as consts
 import os
 import logging
+import zipfile
+
+
+ZIP_PATH = os.path.join(
+    consts.PROJECT_PATH,
+    "movies_data.zip"
+)
+
+EXTRACT_PATH = os.path.join(
+    consts.PROJECT_PATH,
+    "movies_data"
+)
+
+
+def extract_movie_data():
+
+    movie_folder = os.path.join(
+        EXTRACT_PATH,
+        "movie"
+    )
+
+    if not os.path.exists(movie_folder):
+
+        print("Décompression des données...")
+
+        with zipfile.ZipFile(ZIP_PATH, "r") as zip_file:
+            zip_file.extractall(EXTRACT_PATH)
+
+        print("Décompression terminée")
 
 # Configure the logging module
 logging.basicConfig(
@@ -131,9 +160,14 @@ def load_movie_graph_from_csv_for_neo4j():
 
 
 if __name__ == '__main__':
+
+    # Décompresse les fichiers seulement si le dossier movie n'existe pas
+    extract_movie_data()
+
     LOGGER.info("Reset all existing data in the Neo4j database ...")
     delete_all_data_from_neo4j()
 
     LOGGER.info("Started to load the movie data ...")
     load_movie_graph_from_csv_for_neo4j()
+
     LOGGER.info("The movie data has been successfully loaded !!")
